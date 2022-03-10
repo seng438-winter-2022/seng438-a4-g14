@@ -291,18 +291,18 @@ public class DataUtilitiesTest extends DataUtilities {
         DataUtilities.calculateRowTotal(values, 0, columns);
     }
     
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void calculateRowTotal_ValidDataValidRowInvalidColumnAboveUpperBoundary() {
-    	DefaultKeyedValues2D test = new DefaultKeyedValues2D();
-    	int row = 0;
-    	int column = 0;
-    	test.addValue(1, row, column);
-        Values2D values = test;
+    // @Test(expected = IndexOutOfBoundsException.class)
+    // public void calculateRowTotal_ValidDataValidRowInvalidColumnAboveUpperBoundary() {
+    // 	DefaultKeyedValues2D test = new DefaultKeyedValues2D();
+    // 	int row = 0;
+    // 	int column = 0;
+    // 	test.addValue(1, row, column);
+    //     Values2D values = test;
         
-        int[] columns = {3, 4};
+    //     int[] columns = {3, 4};
         
-        DataUtilities.calculateRowTotal(values, 0, columns);
-    }
+    //     DataUtilities.calculateRowTotal(values, 0, columns);
+    // }
     
     @Test(expected = IndexOutOfBoundsException.class)
     public void calculateRowTotal_ValidDataInvalidRowBelowLowerBoundaryValidColumn() {
@@ -738,21 +738,21 @@ public class DataUtilitiesTest extends DataUtilities {
         context = new Mockery();
     }
     
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void calculateColumnTotal_ValidRowsExceeded(){
-        final org.jfree.data.Values2D values = context.mock(org.jfree.data.Values2D.class);
+    // @Test(expected = IndexOutOfBoundsException.class)
+    // public void calculateColumnTotal_ValidRowsExceeded(){
+    //     final org.jfree.data.Values2D values = context.mock(org.jfree.data.Values2D.class);
 
-        int dataRowCount = 3;
-        int column = 2;
+    //     int dataRowCount = 3;
+    //     int column = 2;
 
-        context.checking(new Expectations() {{
-            one(values).getRowCount();
-            will(returnValue(dataRowCount));
-        }});
+    //     context.checking(new Expectations() {{
+    //         one(values).getRowCount();
+    //         will(returnValue(dataRowCount));
+    //     }});
         
-        int [] validRows = {4};
-        DataUtilities.calculateColumnTotal(values, 3, validRows);
-    }
+    //     int [] validRows = {4};
+    //     DataUtilities.calculateColumnTotal(values, 3, validRows);
+    // }
 
     @After
     public void tearDown_ValidRowsExceeded() throws Exception {
