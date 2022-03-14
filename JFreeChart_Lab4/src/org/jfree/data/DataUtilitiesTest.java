@@ -329,6 +329,12 @@ public class DataUtilitiesTest extends DataUtilities {
         
         DataUtilities.calculateRowTotal(values, -1, columns);
     }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void calculateRowTotal_NullDataArgument(){
+	double result = DataUtilities.calculateRowTotal(null, 0);
+    }
     
     
     
@@ -659,6 +665,11 @@ public class DataUtilitiesTest extends DataUtilities {
         
         DataUtilities.calculateColumnTotal(values, -2);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void calculateColumnTotal_NullDataArgument(){
+	double result = DataUtilities.calculateColumnTotal(null, 0);
+    }
 	
 	 //-----------------------------------------------------------------------------------------------------------------------------//
     
@@ -831,7 +842,7 @@ public class DataUtilitiesTest extends DataUtilities {
 
     @Test 
     public void Equal_UnequalNullArrayPositiveValuesArray(){
-	double[][] array1 = {{-13.0, 15},{22,-3}};
+	double[][] array1 = {{13.0, 15},{22,3}};
 	double[][] array2 = null;
 
 	assertFalse("Equal method is expected to return false with a null value and a positive value.", DataUtilities.equal(array1, array2));
@@ -839,10 +850,26 @@ public class DataUtilitiesTest extends DataUtilities {
 
     @Test 
     public void Equal_UnequalNullArrayNegativeValueNullArray(){
-	double[][] array1 = {{-1900.4, -0.2},{-9.23,-10.001}};
-	double[][] array2 = null;
+	double[][] array1 = null;
+	double[][] array2 = {{-1900.4, -0.2},{-9.23,-10.001}};
 
-	assertFalse("Equal method is expected to return false with a null value and a negative value.", DataUtilities.equal(array2, array1));
+	assertFalse("Equal method is expected to return false with a null value and a negative value.", DataUtilities.equal(array1, array2));
+    }
+
+    @Test
+    public void Equal_UnequalSameIndex0DifferentIndex1(){
+	double[][] array1 = {{2},{4.0}};
+	double[][] array2 = {{3},{4.0}};
+
+	assertFalse("Equal method is expected to return false with arrays with different values at index 0 and the same value at index 1", DataUtilities.equal(array1, array2));
+    }
+
+    @Test
+    public void Equal_UnequalArraysLength6CompletelyDifferentValues(){
+	double[][] array1 = {{1.0},{2.0},{3.0},{4.0},{5.0},{6.0}};
+	double[][] array2 = {{-1.0},{-2.0},{-3.0},{-4.0},{-5.0},{-6.0}};
+
+	assertFalse("Equal method is expected to return false with arrays of size [6][1] and no similar values", DataUtilities.equal(array1, array2));
     }
 
     @Test
@@ -867,6 +894,14 @@ public class DataUtilitiesTest extends DataUtilities {
     	double[][] array2 = {{12.67, 1.1}, {16.4, 9.8}};
     	
     	assertFalse("Equal method is expected to return false with arrays containing different values.", DataUtilities.equal(array1, array2));
+    }
+
+    @Test
+    public void Equal_UnequalLengthPositiveArraysALengthLessThanBLength(){
+	double[][] array1 = {{12.1},{2.4}};
+	double[][] array2 = {{12.1},{2.4},{14.3},{0.22}};
+
+    	assertFalse("Equal method is expected to return false with arrays of different lengths and array2 being shorter than array1.", DataUtilities.equal(array1, array2));
     }
     
     @Test
@@ -909,6 +944,14 @@ public class DataUtilitiesTest extends DataUtilities {
     	double [][] result = DataUtilities.clone(expected);
     	
     	assertArrayEquals("Clone method returns double 2D array containing {-15.0, -12.67}, {-5.6, -7.8}.", result, expected);
+    }
+
+    @Test
+    public void Clone_PositiveArrayWithNullRow(){
+	double[][] expected = {{14.3,0.002},null};
+	double[][] result = DataUtilities.clone(expected);
+
+	assertArrayEquals("Clone method expects a double 2D array containing {14.3, 0.002}, null", result, expected);
     }
     
     @Test(expected = IllegalArgumentException.class)
