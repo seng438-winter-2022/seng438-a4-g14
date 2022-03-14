@@ -802,6 +802,7 @@ public class DataUtilitiesTest extends DataUtilities {
     	
     	assertTrue("Equal method is expected to return true with null values.", DataUtilities.equal(array1, array2));
     }
+
     
     @Test
     public void Equal_ExtemeValueArrays() {
@@ -826,9 +827,42 @@ public class DataUtilitiesTest extends DataUtilities {
     	
     	assertTrue("Equal method is expected to return true with empty arrays.", DataUtilities.equal(array1, array2));
     }
+
+
+    @Test 
+    public void Equal_UnequalNullArrayPositiveValuesArray(){
+	double[][] array1 = {{-13.0, 15},{22,-3}};
+	double[][] array2 = null;
+
+	assertFalse("Equal method is expected to return false with a null value and a positive value.", DataUtilities.equal(array1, array2));
+    }
+
+    @Test 
+    public void Equal_UnequalNullArrayNegativeValueNullArray(){
+	double[][] array1 = {{-1900.4, -0.2},{-9.23,-10.001}};
+	double[][] array2 = null;
+
+	assertFalse("Equal method is expected to return false with a null value and a negative value.", DataUtilities.equal(array2, array1));
+    }
+
+    @Test
+    public void Equal_UnequalLengthPositiveArrays(){
+	double[][] array1 = {{1.0},{58.0},{12.4}};
+	double[][] array2 = {{1.0},{58.0}};
+
+	assertFalse("Equal method is expected to return false with two positive arrays of different lengths", DataUtilities.equal(array1, array2));
+    }
     
     @Test
-    public void Equal_DifferentValueArrays() {
+    public void Equal_UnequalLengthNegativeValueEmptyArray(){
+	double[][] array1 = {{},{}};
+	double[][] array2 = {{-1,-2},{-4,-5}};
+
+	assertFalse("Equal method is expected to return false with a negative array and an empty array", DataUtilities.equal(array1, array2));
+    }	
+
+    @Test
+    public void Equal_UnequalPositiveValueArrays() {
     	double[][] array1 = {{12.55, 1.0}, {13.4, 7.8}};
     	double[][] array2 = {{12.67, 1.1}, {16.4, 9.8}};
     	
@@ -914,7 +948,7 @@ public class DataUtilitiesTest extends DataUtilities {
     	
     	assertArrayEquals("Clone method returns double 2D array containing {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}.", result, expected);
     }
-    
+
     @Test
     public void Clone_PositiveInfArrayData() {
     	double [][] expected = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
