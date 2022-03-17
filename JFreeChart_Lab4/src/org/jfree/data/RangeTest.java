@@ -5,31 +5,50 @@ import org.jfree.data.Range;
 import org.junit.*;
 
 public class RangeTest {
-    private Range exampleRange;
-    private Range higherRange;
-    private Range extraneousMaxRange;
-    private Range extraneousMinRange;
-    private Range refRange;
-    private Range testRange;
-    private Range smallestRange;
+	private Range exampleRange;
+	private Range higherRange;
+	private Range extraneousMaxRange;
+	private Range extraneousMinRange;
+	private Range refRange;
+	private Range testRange;
+	private Range smallestRange;
+	private Range fracRange;
 	private Range nanRange;
 
-    @BeforeClass public static void setUpBeforeClass() throws Exception {
-    }
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
 
-    @Before
-    public void setUp() throws Exception { 
-    	exampleRange = new Range(-1, 1);
-        higherRange = new Range(2,4);
-        extraneousMaxRange = new Range(1, Double.MAX_VALUE);
-        extraneousMinRange = new Range(-Double.MIN_VALUE, 1);
-    	refRange = new Range (-8.0, 16.0);
-    	smallestRange = new Range(0.0, Double.MIN_VALUE);
-    }
+	@Before
+	public void setUp() throws Exception {
+		exampleRange = new Range(-1, 1);
+		higherRange = new Range(2, 4);
+		extraneousMaxRange = new Range(1, Double.MAX_VALUE);
+		extraneousMinRange = new Range(-Double.MIN_VALUE, 1);
+		refRange = new Range(-8.0, 16.0);
+		smallestRange = new Range(0.0, Double.MIN_VALUE);
+		fracRange = new Range(3.221, 7.8);
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void rangeConstructorLowerBoundGreaterThanUpper() {
 		testRange = new Range(1, -1);
+	}
+
+	@Test
+	public void rangeValidConstructionCheckLower() {
+		Range constructRange = new Range(-9.0, 2.0);
+		assertTrue(
+				"The lower value of a constructed range with arguments (-9.0, 2.0) matches the value '2.0', provided by the arguments.",
+				(constructRange.getLowerBound() == -9.0));
+	}
+
+	@Test
+	public void rangeValidConstructionCheckUpper() {
+		Range constructRange = new Range(-9.0, 2.0);
+		assertTrue(
+				"The upper value of a constructed range with arguments (-9.0, 2.0) matches the value '-9.0', as provided by the arguments",
+				(constructRange.getUpperBound() == 2.0));
 	}
 
 	@Test
@@ -51,28 +70,34 @@ public class RangeTest {
 	public void combineNullAndValidRange() {
 		testRange = Range.combine(null, exampleRange);
 		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
 	public void combineNullAndInvalidRange() {
 		testRange = Range.combine(higherRange, null);
 		assertEquals("The upper bound should be 4", 4, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 4", 2, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be 4", 2, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void combineComparingIgnoreNaNandRegularOverload(){
+	    Range testRange = new Range(1, 22.0);
+	    assertTrue("\"combine()\" and \"combineIgonringNaN()\" return the same result when NaN is not used and the same arguments are provided.", Range.combine(testRange, exampleRange).equals(Range.combineIgnoringNaN(testRange, exampleRange)));
 	}
 
 	@Test
 	public void combineValidRanges() {
 		testRange = Range.combine(exampleRange, higherRange);
 		assertEquals("The upper bound should be 4", 4, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
 	public void combineIgnoreNaNNullAndValidRange() {
 		testRange = Range.combineIgnoringNaN(null, exampleRange);
 		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
@@ -86,7 +111,7 @@ public class RangeTest {
 	public void combineIgnoreNaNValidRangeAndNull() {
 		testRange = Range.combineIgnoringNaN(higherRange, null);
 		assertEquals("The upper bound should be 4", 4, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 4", 2, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be 4", 2, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
@@ -101,7 +126,7 @@ public class RangeTest {
 		nanRange = new Range(Double.NaN, Double.NaN);
 		testRange = Range.combineIgnoringNaN(exampleRange, higherRange);
 		assertEquals("The upper bound should be 4", 4, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
@@ -115,7 +140,7 @@ public class RangeTest {
 	public void expandUpperAboveLower() {
 		testRange = Range.expand(higherRange, 2, 4);
 		assertEquals("The upper bound should be 12.0", 12, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
 
 	}
 
@@ -123,179 +148,225 @@ public class RangeTest {
 	public void expandUpperBelowLower() {
 		testRange = Range.expand(exampleRange, 4, -6);
 		assertEquals("The upper bound should be -10", -10, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -10", -10, testRange.getLowerBound(), .000000001d);
+		assertEquals("The lower bound should be -10", -10, testRange.getLowerBound(), .000000001d);
 
 	}
 
-    @Test
-    public void expandToIncludeValidRangeAboveRange() {
-        Range testRange = Range.expandToInclude(exampleRange, 2);
-        assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void expandToIncludeValidRangeBelowRange() {
-        Range testRange = Range.expandToInclude(exampleRange, -2);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void expandToIncludeValidRangeInRange() {
-        Range testRange = Range.expandToInclude(exampleRange, 0);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void expandToIncludeValidRangeUpperBound() {
-        Range testRange = Range.expandToInclude(exampleRange, 1);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void expandToIncludeValidRangeLowerBound() {
-        Range testRange = Range.expandToInclude(exampleRange, -1);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
-    
-    @Test
-    public void expandToIncludeNullRangeAboveRange() {
-        Range testRange = Range.expandToInclude(null, 2);
-        assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 2", 2, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void expandToIncludeValidRangeLargeExtraneousValue() {
-        Range testRange = Range.expandToInclude(exampleRange, Double.MAX_VALUE);
-        assertEquals("The upper bound of the range should be " + Double.toString(Double.MAX_VALUE), Double.MAX_VALUE, testRange.getUpperBound(), .000000001d);
-    }
-
-    @Test
-    public void shiftValidRangeGreaterThanZero() {
-        Range testRange = Range.shift(higherRange, 2, false);
-        assertEquals("The upper bound should be 6", 6, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 4", 4, testRange.getLowerBound(), .000000001d);
-    }
-    
-    @Test
-    public void shiftValidRangeGreaterThanZeroTwoParams() {
-        Range testRange = Range.shift(higherRange, 2, false);
-        assertEquals("The upper bound should be 6", 6, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 4", 4, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void shiftValidRangeEqualsZero() {
-        Range testRange = Range.shift(exampleRange, 0, false);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
-
-    @Test
-    public void shiftValidRangeLessThanZero() {
-        Range testRange = Range.shift(higherRange, -1, false);
-        assertEquals("The upper bound should be 3", 3, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 1", 1, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void expandToIncludeValidRangeAboveRange() {
+		Range testRange = Range.expandToInclude(exampleRange, 2);
+		assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
 
 	@Test
-	public void shiftValidRangeGreaterThanZeroIncludesZeroBounds() {
+	public void expandToIncludeValidRangeBelowRange() {
+		Range testRange = Range.expandToInclude(exampleRange, -2);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void expandToIncludeValidRangeInRange() {
+		Range testRange = Range.expandToInclude(exampleRange, 0);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void expandToIncludeValidRangeUpperBound() {
+		Range testRange = Range.expandToInclude(exampleRange, 1);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void expandToIncludeValidRangeLowerBound() {
+		Range testRange = Range.expandToInclude(exampleRange, -1);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void expandToIncludeNullRangeAboveRange() {
+		Range testRange = Range.expandToInclude(null, 2);
+		assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be 2", 2, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void expandToIncludeValidRangeLargeExtraneousValue() {
+		Range testRange = Range.expandToInclude(exampleRange, Double.MAX_VALUE);
+		assertEquals("The upper bound of the range should be " + Double.toString(Double.MAX_VALUE), Double.MAX_VALUE,
+				testRange.getUpperBound(), .000000001d);
+	}
+
+	@Test
+	public void shiftValidRangeGreaterThanZero() {
+		Range testRange = Range.shift(higherRange, 2, false);
+		assertEquals("The upper bound should be 6", 6, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be 4", 4, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void shiftValidRangeGreaterThanZeroTwoParams() {
+		Range testRange = Range.shift(higherRange, 2, false);
+		assertEquals("The upper bound should be 6", 6, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be 4", 4, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void shiftValidRangeEqualsZero() {
+		Range testRange = Range.shift(exampleRange, 0, false);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void shiftValidRangeLessThanZeroUpperBound() {
+		Range testRange = Range.shift(higherRange, -1, false);
+		assertEquals("The upper bound should be 3", 3, testRange.getUpperBound(), .000000001d);
+	}
+	
+	@Test
+	public void shiftValidRangeLessThanZeroLowerBound() {
+		Range testRange = Range.shift(higherRange, -1, false);
+		assertEquals("The lower bound should be 1", 1, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void shiftValidRangeGreaterThanZeroIncludesZeroBoundsUpperBound() {
 		Range testRange = Range.shift(smallestRange, 1, false);
-		assertEquals("The upper bound should be " + Double.toString(Double.MIN_VALUE + 1), Double.MIN_VALUE + 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 1", 1, testRange.getLowerBound(), .000000001d);
+		assertEquals("The upper bound should be " + Double.toString(Double.MIN_VALUE + 1), Double.MIN_VALUE + 1,
+				testRange.getUpperBound(), .000000001d);
+	}
+	
+	@Test
+	public void shiftValidRangeGreaterThanZeroIncludesZeroBoundsLowerBound() {
+		Range testRange = Range.shift(smallestRange, 1, false);
+		assertEquals("The lower bound should be 1", 1, testRange.getLowerBound(), .000000001d);
 	}
 
 	@Test
-	public void shiftValidRangeGreaterThanZeroWithZeroCrossing() {
+	public void shiftValidRangeGreaterThanZeroWithZeroCrossingUpperBound() {
 		Range testRange = Range.shift(exampleRange, 2, true);
 		assertEquals("The upper bound should be 3.0", 3.0, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 1.0", 1.0, testRange.getLowerBound(), .000000001d);
 	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shiftNullRangeLessThanZero() {
-        Range testRange = Range.shift(null, -2, false);
-    }
-    
-    @Test
-    public void shiftValidRangeMinNegativeDoubleValue() {
-        Range testRange = Range.shift(exampleRange, -1 * Double.MIN_VALUE, false);
-        assertEquals("The upper bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void shiftValidRangeGreaterThanZeroWithZeroCrossingLowerBound() {
+		Range testRange = Range.shift(exampleRange, 2, true);
+		assertEquals("The lower bound should be 1.0", 1.0, testRange.getLowerBound(), .000000001d);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shiftNullRangeLessThanZero() {
+		Range testRange = Range.shift(null, -2, false);
+	}
 
-    @Test
-    public void shiftValidRangeMaxDoubleValue() {
-        Range testRange = Range.shift(exampleRange, Double.MAX_VALUE, false);
-        assertEquals("The upper bound should be " + Double.toString(Double.MAX_VALUE + 1), Double.MAX_VALUE + 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 0", 0, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void shiftValidRangeMinNegativeDoubleValue() {
+		Range testRange = Range.shift(exampleRange, -1 * Double.MIN_VALUE, false);
+		assertEquals("The upper bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test
-    public void shiftValidRangeCrossesZero() {
-        Range testRange = Range.shift(exampleRange, 2, false);
-        assertEquals("The upper bound should be 3", 3, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be 0", 0, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void shiftValidRangeMaxDoubleValueUpperBound() {
+		Range testRange = Range.shift(exampleRange, Double.MAX_VALUE, false);
+		assertEquals("The upper bound should be " + Double.toString(Double.MAX_VALUE + 1), Double.MAX_VALUE + 1,
+				testRange.getUpperBound(), .000000001d);
+	}
+	
+	@Test
+	public void shiftValidRangeMaxDoubleValueLowerBound() {
+		Range testRange = Range.shift(exampleRange, Double.MAX_VALUE, false);
+		assertEquals("The lower bound should be 0", 0, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test
-    public void scaleValidRangeGreaterThanOne() {
-        Range testRange = Range.scale(exampleRange, 2);
-        assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void shiftValidRangeCrossesZeroUpperBound() {
+		Range testRange = Range.shift(exampleRange, 2, false);
+		assertEquals("The upper bound should be 3", 3, testRange.getUpperBound(), .000000001d);
+	}
+@Test
+	public void shiftValidRangeCrossesZeroLowerBound() {
+		Range testRange = Range.shift(exampleRange, 2, false);
+		assertEquals("The lower bound should be 0", 0, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test
-    public void scaleValidRangeEqualsOne() {
-        Range testRange = Range.scale(exampleRange, 1);
-        assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void scaleValidRangeGreaterThanOneUpperBound() {
+		Range testRange = Range.scale(exampleRange, 2);
+		assertEquals("The upper bound should be 2", 2, testRange.getUpperBound(), .000000001d);
+	}
+	
+	@Test
+	public void scaleValidRangeGreaterThanOnLowerBound() {
+		Range testRange = Range.scale(exampleRange, 2);
+		assertEquals("The lower bound should be -2", -2, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test
-    public void scaleValidRangeLessThanOne() {
-        Range testRange = Range.scale(exampleRange, 0.5);
-        assertEquals("The upper bound should be 0.5", 0.5, testRange.getUpperBound(), .000000001d);
-        assertEquals("The lower bound should be -0.5", -0.5, testRange.getLowerBound(), .000000001d);
-    }
+	@Test
+	public void scaleValidRangeEqualsOneUpperBound() {
+		Range testRange = Range.scale(exampleRange, 1);
+		assertEquals("The upper bound should be 1", 1, testRange.getUpperBound(), .000000001d);
+	}
+	
+	@Test
+	public void scaleValidRangeEqualsOneLowerBound() {
+		Range testRange = Range.scale(exampleRange, 1);
+		assertEquals("The lower bound should be -1", -1, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void scaleValidRangeLessThanZero() {
-        Range testRange = Range.scale(exampleRange, -1);
-    }
+	@Test
+	public void scaleValidRangeLessThanOneUpperBound() {
+		Range testRange = Range.scale(exampleRange, 0.5);
+		assertEquals("The upper bound should be 0.5", 0.5, testRange.getUpperBound(), .000000001d);
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void scaleNullRangeLessThanOne() {
-        Range testRange = Range.scale(null, 2);
-    }
+	
+	@Test
+	public void scaleValidRangeLessThanOneLowerBound() {
+		Range testRange = Range.scale(exampleRange, 0.5);
+		assertEquals("The lower bound should be -0.5", -0.5, testRange.getLowerBound(), .000000001d);
+	}
 
-    @Test
-    public void scaleExtraneousMaxRangeGreaterThanOne() {
-        Range testRange = Range.scale(extraneousMaxRange, 2);
-        assertTrue("The upper bound of the range should be infinity", Double.isInfinite(testRange.getUpperBound()));
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void scaleValidRangeLessThanZero() {
+		Range testRange = Range.scale(exampleRange, -1);
+	}
 
-    @Test
-    public void scaleExtraneousMinRangeLessThanOne() {
-        Range testRange = Range.scale(extraneousMinRange, 0.5);
-        assertEquals("The lower bound of the range should be " + Double.toString(Double.MIN_VALUE / 2), Double.MIN_VALUE / 2, testRange.getLowerBound(), .000000001d);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void scaleNullRangeLessThanOne() {
+		Range testRange = Range.scale(null, 2);
+	}
 
-    @Test
-    public void scaleValidRangeByMaxDouble() {
-        Range testRange = Range.scale(exampleRange, Double.MAX_VALUE);
-        assertEquals("The upper bound of the range should be " + Double.toString(Double.MAX_VALUE), Double.MAX_VALUE, testRange.getUpperBound(), .000000001d);
-    }
+	@Test
+	public void scaleExtraneousMaxRangeGreaterThanOne() {
+		Range testRange = Range.scale(extraneousMaxRange, 2);
+		assertTrue("The upper bound of the range should be infinity", Double.isInfinite(testRange.getUpperBound()));
+	}
 
-    @Test
-    public void scaleValidRangeByMinDouble() {
-        Range testRange = Range.scale(exampleRange, Double.MIN_VALUE);
-        assertEquals("The upper bound of the range should be " + Double.toString(Double.MIN_VALUE), Double.MIN_VALUE, testRange.getUpperBound(), .000000001d);
-    }
+	@Test
+	public void scaleExtraneousMinRangeLessThanOne() {
+		Range testRange = Range.scale(extraneousMinRange, 0.5);
+		assertEquals("The lower bound of the range should be " + Double.toString(Double.MIN_VALUE / 2),
+				Double.MIN_VALUE / 2, testRange.getLowerBound(), .000000001d);
+	}
+
+	@Test
+	public void scaleValidRangeByMaxDouble() {
+		Range testRange = Range.scale(exampleRange, Double.MAX_VALUE);
+		assertEquals("The upper bound of the range should be " + Double.toString(Double.MAX_VALUE), Double.MAX_VALUE,
+				testRange.getUpperBound(), .000000001d);
+	}
+
+	@Test
+	public void scaleValidRangeByMinDouble() {
+		Range testRange = Range.scale(exampleRange, Double.MIN_VALUE);
+		assertEquals("The upper bound of the range should be " + Double.toString(Double.MIN_VALUE), Double.MIN_VALUE,
+				testRange.getUpperBound(), .000000001d);
+	}
 
 	@Test
 	public void intersectsWithinBoundaryNotTouchingBoundaryDoubles() {
@@ -324,7 +395,8 @@ public class RangeTest {
 	// the test fails instead
 	// @Test
 	// public void intersectsOnlyTouchingLowerBoundaryDoubles() {
-	// 	assertTrue("The range from -14 to -8 intersects the range from -8.0 to 16.0", refRange.intersects(-14.0, -8.0));
+	// assertTrue("The range from -14 to -8 intersects the range from -8.0 to 16.0",
+	// refRange.intersects(-14.0, -8.0));
 	// }
 
 	@Test
@@ -340,11 +412,12 @@ public class RangeTest {
 
 	// BUG: Should pass, because the test range overlaps with refRange at 16.0, but
 	// the test fails instead
-	//	@Test
-	//	public void intersectsOnlyTouchingUpperBoundaryDoubles() {
-	//		assertTrue("The range from 16.0 to 32.0 intersects the range from -8.0 to 16.0",
-	//				refRange.intersects(16.0, 32.0));
-	//	}
+	// @Test
+	// public void intersectsOnlyTouchingUpperBoundaryDoubles() {
+	// assertTrue("The range from 16.0 to 32.0 intersects the range from -8.0 to
+	// 16.0",
+	// refRange.intersects(16.0, 32.0));
+	// }
 
 	@Test
 	public void intersectsFullyAboveUpperBoundaryNotTouchingBoundaryDoubles() {
@@ -394,12 +467,13 @@ public class RangeTest {
 
 	// BUG: Should pass, because the test range overlaps with refRange at -8.0, but
 	// the test fails instead
-	//	@Test
-	//	public void intersectsOnlyTouchingLowerBoundaryRangeArg() {
-	//		testRange = new Range(-45.0, -8.0);
-	//		assertTrue("The range from -45.0 to -8.0 intersects the range from -8.0 to 16.0",
-	//				refRange.intersects(testRange));
-	//	}
+	// @Test
+	// public void intersectsOnlyTouchingLowerBoundaryRangeArg() {
+	// testRange = new Range(-45.0, -8.0);
+	// assertTrue("The range from -45.0 to -8.0 intersects the range from -8.0 to
+	// 16.0",
+	// refRange.intersects(testRange));
+	// }
 
 	@Test
 	public void intersectsFullyBelowLowerBoundaryNotTouchingBoundaryRangeArg() {
@@ -417,12 +491,13 @@ public class RangeTest {
 
 	// BUG: Should pass, because the test range overlaps with refRange at 16.0, but
 	// the test fails instead
-	//	@Test
-	//	public void intersectsOnlyTouchingUpperBoundaryRangeArg() {
-	//		testRange = new Range(16.0, 23.0);
-	//		assertTrue("The range from 16.0 to 23.0 intersects the range from -8.0 to 16.0",
-	//				refRange.intersects(testRange));
-	//	}
+	// @Test
+	// public void intersectsOnlyTouchingUpperBoundaryRangeArg() {
+	// testRange = new Range(16.0, 23.0);
+	// assertTrue("The range from 16.0 to 23.0 intersects the range from -8.0 to
+	// 16.0",
+	// refRange.intersects(testRange));
+	// }
 
 	@Test
 	public void intersectsFullyAboveUpperBoundaryNotTouchingBoundaryRangeArg() {
@@ -495,6 +570,12 @@ public class RangeTest {
 	@Test
 	public void getCentralValueZero() {
 		assertEquals("The central value of the range should be " + 0, 0, exampleRange.getCentralValue(), .000000001d);
+	}
+
+	@Test
+	public void getCentralValueFractionalResult() {
+		assertEquals("The central value of the range should be" + 5.5105, 5.5105, fracRange.getCentralValue(),
+				.000000001d);
 	}
 
 	@Test
