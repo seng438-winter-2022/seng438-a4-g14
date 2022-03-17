@@ -75,9 +75,9 @@
       "id": "78b746ee-45e5-4159-ab5d-a45bdf36bf28",
       "comment": "",
       "command": "open",
-      "target": "",
+      "target": "https://www.bestbuy.ca/en-ca/product/samsung-55-4k-uhd-hdr-led-tizen-smart-tv-un55tu7000fxzc-titan-grey/14469353",
       "targets": [],
-      "value": "https://www.bestbuy.ca/en-ca/product/samsung-55-4k-uhd-hdr-led-tizen-smart-tv-un55tu7000fxzc-titan-grey/14469353"
+      "value": ""
     }, {
       "id": "e4101d8e-b96b-47fc-8cf7-be83ab2e0ba1",
       "comment": "",
@@ -153,6 +153,13 @@
       "targets": [],
       "value": ""
     }, {
+      "id": "416370ae-4ffb-4953-9a77-41a1d440d23c",
+      "comment": "Wait for Add to Cart",
+      "command": "waitForElementPresent",
+      "target": "xpath=//div[@data-automation='checkout-button-container']//div//div//form//button",
+      "targets": [],
+      "value": "30000"
+    }, {
       "id": "91773429-4cb0-449a-8de6-b16b76cc5868",
       "comment": "Add to Cart",
       "command": "click",
@@ -162,10 +169,17 @@
     }, {
       "id": "1296c7f2-9899-41c9-b6f1-b02f5fdd53d5",
       "comment": "Check Item Added to Cart Message",
-      "command": "//assertText",
+      "command": "assertText",
       "target": "xpath=//div[contains(@class, 'x-page-content')]//div[contains(@class, 'pageContainer')]//div//div[contains(@class, 'addonsPageContentContainer')]//div[contains(@class, 'item-added-message')]//div//div//p",
       "targets": [],
       "value": "This item has been added to your cart."
+    }, {
+      "id": "1851d164-0a42-4b76-b63b-ebc3db61b865",
+      "comment": "Go To Cart",
+      "command": "click",
+      "target": "xpath=//a[@data-automation='x-basket']",
+      "targets": [],
+      "value": ""
     }, {
       "id": "7470ce15-e7c0-43fa-9602-7c2db216bc92",
       "comment": "Remove From Cart",
@@ -222,9 +236,13 @@
     }, {
       "id": "bd423597-497d-4c74-ab0b-cbfb324e732b",
       "comment": "Check first Location",
-      "command": "//assertText",
-      "target": "xpath=//ol[@class='ResultList']//li[1]//article//h2//a//span//span[@class='LocationName-geo']",
-      "targets": [],
+      "command": "assertText",
+      "target": "xpath=//span[@id='location-name']/span[2]",
+      "targets": [
+        ["css=#js-yl-2656907 .LocationName-geo", "css:finder"],
+        ["xpath=//span[@id='location-name']/span[2]", "xpath:idRelative"],
+        ["xpath=//span/span[2]", "xpath:position"]
+      ],
       "value": "Market Mall"
     }]
   }, {
@@ -1186,9 +1204,13 @@
     }, {
       "id": "a8f99c24-ad44-49c8-9767-d5547c8e52ef",
       "comment": "Check first Location",
-      "command": "//assertText",
+      "command": "assertText",
       "target": "xpath=//div[@class='Locator-noResults']",
-      "targets": [],
+      "targets": [
+        ["css=.Locator-noResults", "css:finder"],
+        ["xpath=//div[@id='js-locator']/div[2]/div[3]/div/div", "xpath:idRelative"],
+        ["xpath=//div[2]/div[3]/div/div", "xpath:position"]
+      ],
       "value": "Sorry, there are no locations near \"MONTE VISTA, CA\". Please modify your search and try again or browse our directory."
     }]
   }, {
@@ -1302,64 +1324,13 @@
         ["xpath=//span[contains(.,'Store Pickup')]", "xpath:innerText"]
       ],
       "value": "Store Pickup"
-    }]
-  }, {
-    "id": "4e2c2cf3-55d5-491e-a2dd-69f2b9ddca0f",
-    "name": "Dell In Store Pickup Out of Stock",
-    "commands": [{
-      "id": "4b5ffc13-b9d8-4140-94f8-0e51f67e4308",
-      "comment": "Open Page",
-      "command": "open",
-      "target": "https://www.bestbuy.ca/en-ca",
-      "targets": [],
-      "value": ""
     }, {
-      "id": "e3782884-558f-41f7-ad63-26c62a2a758b",
-      "comment": "Set Window",
-      "command": "setWindowSize",
-      "target": "1920x1080",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "5f9cc978-15c3-4722-8e42-5eea9e468492",
-      "comment": "Click Brands Dropdown",
+      "id": "473c4fae-584c-4642-a3b4-594012412e3d",
+      "comment": "Cancel Order",
       "command": "click",
-      "target": "xpath=//span[@data-automation='x-brands']",
+      "target": "xpath=//div[@data-automation='cancel-rpu']//button",
       "targets": [],
       "value": ""
-    }, {
-      "id": "6ba72ccb-5df2-41c1-b947-8bdc487ccc0b",
-      "comment": "Click Dell",
-      "command": "click",
-      "target": "xpath=//ul[@data-automation='popular-brands-brands-list']//li[9]//a",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "84737e0d-50f7-4faf-9c86-05d0624a945f",
-      "comment": "Select Fourth Item",
-      "command": "click",
-      "target": "xpath=(//div[contains(@class, 'x-productListItem')])[2]//div/a",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "e0bd4a61-17f6-4f55-a737-f5dea30a4eb5",
-      "comment": "Wait for Button",
-      "command": "waitForElementPresent",
-      "target": "xpath=//div[@data-automation='checkout-button-container']//button[@disabled]",
-      "targets": [],
-      "value": "30000"
-    }, {
-      "id": "366efb45-681c-41d1-98d0-6821f225ab02",
-      "comment": "Check Unable to Pickup",
-      "command": "verifyElementPresent",
-      "target": "xpath=//div[@data-automation='checkout-button-container']//button[@disabled]",
-      "targets": [
-        ["css=.x-reserveInStoreButton > .content_3Dbgg", "css:finder"],
-        ["xpath=//div[@id='root']/div/div[3]/div[2]/div/div[2]/div[3]/div/div/button/span", "xpath:idRelative"],
-        ["xpath=//div[3]/div/div/button/span", "xpath:position"],
-        ["xpath=//span[contains(.,'Pick Up at Store')]", "xpath:innerText"]
-      ],
-      "value": "This item has been added to your cart."
     }]
   }],
   "suites": [{
