@@ -2,6 +2,8 @@ package org.jfree.data;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.jfree.data.DataUtilities;
 import org.jfree.data.DefaultKeyedValues2D;
 import org.jfree.data.KeyedValues;
@@ -26,7 +28,7 @@ public class DataUtilitiesTest extends DataUtilities {
 		DataUtilities.createNumberArray2D(testArray);
 	}
 	
-    @Test
+    @Test()
     public void createNumberArray2D_EmptyArray() {
         double[][] testArray = new double[][] {};
         
@@ -840,6 +842,114 @@ public class DataUtilitiesTest extends DataUtilities {
     }
 
 
+    
+    @Test
+    public void Equal_NaNValueArrays() {
+    	double[][] array1 = {{Double.NaN, Double.NaN}, {Double.NaN, Double.NaN}};
+    	double[][] array2 = {{Double.NaN, Double.NaN}, {Double.NaN, Double.NaN}};
+    	
+    	assertTrue("Equal method is expected to return true with NaN values.", DataUtilities.equal(array1, array2));
+    }
+    
+    @Test
+    public void Equal_PositiveInfValueArrays() {
+    	double[][] array1 = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
+    	double[][] array2 = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
+    	
+    	assertTrue("Equal method is expected to return true with positive infinity values.", DataUtilities.equal(array1, array2));
+    }
+    
+    @Test
+    public void Equal_NegativeInfValueArrays() {
+    	double[][] array1 = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
+    	double[][] array2 = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
+    	
+    	assertTrue("Equal method is expected to return true with negative infinity values.", DataUtilities.equal(array1, array2));
+    }
+    
+	 //-----------------------------------------------------------------------------------------------------------------------------//
+    
+    @Test(timeout=100)
+    public void Clone_ValidPositiveValuesArrayData() {
+    	double [][] expected = {{15.0, 12.67}, {5.6, 7.8}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {15.0, 12.67}, {5.6, 7.8}.", result, expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_ValidNegativeValuesArrayData() {
+    	double [][] expected = {{-15.0, -12.67}, {-5.6, -7.8}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {-15.0, -12.67}, {-5.6, -7.8}.", result, expected);
+    }
+
+    @Test(timeout=100)
+    public void Clone_PositiveArrayWithNullRow(){
+	double[][] expected = {{14.3,0.002},null};
+	double[][] result = DataUtilities.clone(expected);
+
+	assertArrayEquals("Clone method expects a double 2D array containing {14.3, 0.002}, null", result, expected);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void Clone_NullArrayData() {
+    	double [][] expected = null;
+    	DataUtilities.clone(expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_EmptyArrayData() {
+    	double [][] expected = {{}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array that is empty.", result, expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_ExtremeValuesArrayData() {
+    	double [][] expected = {{Double.MAX_VALUE, 12.67}, {Double.MAX_VALUE, Double.MAX_VALUE}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {Double.MAX_VALUE, 12.67}, {Double.MAX_VALUE, Double.MAX_VALUE}.", result, expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_SmallNegativeValuesArrayData() {
+    	double [][] expected = {{Double.MIN_VALUE, Double.MIN_VALUE}, {Double.MIN_VALUE, Double.MIN_VALUE}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {Double.MIN_VALUE, Double.MIN_VALUE}, {Double.MIN_VALUE, Double.MIN_VALUE}.", result, expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_NaNArrayData() {
+    	double [][] expected = {{Double.NaN, Double.NaN}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}.", result, expected);
+    }
+
+    @Test(timeout=100)
+    public void Clone_PositiveInfArrayData() {
+    	double [][] expected = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}.", result, expected);
+    }
+    
+    @Test(timeout=100)
+    public void Clone_NegativeInfArrayData() {
+    	double [][] expected = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
+    	double [][] result = DataUtilities.clone(expected);
+    	
+    	assertArrayEquals("Clone method returns double 2D array containing {Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}.", result, expected);
+    }
+    
+    //-----------------------------------------------------------------------------------------------------------------------------//
+
+
     @Test 
     public void Equal_UnequalNullArrayPositiveValuesArray(){
 	double[][] array1 = {{13.0, 15},{22,3}};
@@ -904,110 +1014,342 @@ public class DataUtilitiesTest extends DataUtilities {
     	assertFalse("Equal method is expected to return false with arrays of different lengths and array2 being shorter than array1.", DataUtilities.equal(array1, array2));
     }
     
-    @Test
-    public void Equal_NaNValueArrays() {
-    	double[][] array1 = {{Double.NaN, Double.NaN}, {Double.NaN, Double.NaN}};
-    	double[][] array2 = {{Double.NaN, Double.NaN}, {Double.NaN, Double.NaN}};
-    	
-    	assertTrue("Equal method is expected to return true with NaN values.", DataUtilities.equal(array1, array2));
-    }
-    
-    @Test
-    public void Equal_PositiveInfValueArrays() {
-    	double[][] array1 = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
-    	double[][] array2 = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
-    	
-    	assertTrue("Equal method is expected to return true with positive infinity values.", DataUtilities.equal(array1, array2));
-    }
-    
-    @Test
-    public void Equal_NegativeInfValueArrays() {
-    	double[][] array1 = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
-    	double[][] array2 = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
-    	
-    	assertTrue("Equal method is expected to return true with negative infinity values.", DataUtilities.equal(array1, array2));
-    }
-    
-	 //-----------------------------------------------------------------------------------------------------------------------------//
-    
-    @Test
-    public void Clone_ValidPositiveValuesArrayData() {
-    	double [][] expected = {{15.0, 12.67}, {5.6, 7.8}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {15.0, 12.67}, {5.6, 7.8}.", result, expected);
-    }
-    
-    @Test
-    public void Clone_ValidNegativeValuesArrayData() {
-    	double [][] expected = {{-15.0, -12.67}, {-5.6, -7.8}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {-15.0, -12.67}, {-5.6, -7.8}.", result, expected);
-    }
-
-    @Test
-    public void Clone_PositiveArrayWithNullRow(){
-	double[][] expected = {{14.3,0.002},null};
-	double[][] result = DataUtilities.clone(expected);
-
-	assertArrayEquals("Clone method expects a double 2D array containing {14.3, 0.002}, null", result, expected);
-    }
-    
+    //added mutation tests
+    //150:
     @Test(expected = IllegalArgumentException.class)
-    public void Clone_NullArrayData() {
-    	double [][] expected = null;
-    	DataUtilities.clone(expected);
+    public void calculateColumnTotalOverloaded_NullDataArgument(){
+    	int [] rows = {0};
+    	double result = DataUtilities.calculateColumnTotal(null, 0, rows);
+    }
+    //201:
+    @Test(expected = IllegalArgumentException.class)
+    public void calculateRowTotalOverloaded_NullDataArgument(){
+    	int [] columns = {0};
+    	double result = DataUtilities.calculateRowTotal(null, 0, columns);
+    }
+    //85, 13:
+	@Test
+	public void Equal_MiddleArrayNotEqual() {
+		double [][] array1 = {{7,5},{4,2},{6,9}};
+		double [][] array2 = {{7,5},{2,4},{6,9}};
+
+		assertFalse("Equal method is expected to return false.", DataUtilities.equal(array1, array2));
+	}
+	
+	@Test
+	public void Equal_OuterArrayNotEqual() {
+		double [][] array1 = {{7,5},{4,2},{6,9}};
+		double [][] array2 = {{5,7},{4,2},{9,6}};
+
+		assertFalse("Equal method is expected to return false.", DataUtilities.equal(array1, array2));
+	}
+    
+	
+    @Test
+    public void calculateColumnTotal_ValidDataValidRowValidColumnsUnusedRow() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(4));
+                one(values).getValue(1, 1);
+                will(returnValue(5));
+                one(values).getValue(2, 1);
+                will(returnValue(9));
+            }
+        });
+        int[] rows = {1, 2, 5};
+        double result = DataUtilities.calculateColumnTotal(values, 1, rows);
+        assertEquals("The calculated total is 14.0",result, 14.0, .000000001d);
+    }
+	
+    
+    @Test
+    public void calculateColumnTotal_NullDataAndValidDataValidColumnValidRows() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(null));
+                one(values).getValue(1, 0);
+                will(returnValue(2.4));
+                one(values).getValue(2, 0);
+                will(returnValue(null));
+            }
+        });
+        int[] rows = {0, 1, 2};
+        double result = DataUtilities.calculateColumnTotal(values, 0, rows);
+        assertEquals("The calculated total is 2.4",result, 2.4, .000000001d);
     }
     
     @Test
-    public void Clone_EmptyArrayData() {
-    	double [][] expected = {{}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array that is empty.", result, expected);
-    }
-    
-    @Test
-    public void Clone_ExtremeValuesArrayData() {
-    	double [][] expected = {{Double.MAX_VALUE, 12.67}, {Double.MAX_VALUE, Double.MAX_VALUE}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {Double.MAX_VALUE, 12.67}, {Double.MAX_VALUE, Double.MAX_VALUE}.", result, expected);
-    }
-    
-    @Test
-    public void Clone_SmallNegativeValuesArrayData() {
-    	double [][] expected = {{Double.MIN_VALUE, Double.MIN_VALUE}, {Double.MIN_VALUE, Double.MIN_VALUE}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {Double.MIN_VALUE, Double.MIN_VALUE}, {Double.MIN_VALUE, Double.MIN_VALUE}.", result, expected);
-    }
-    
-    @Test
-    public void Clone_NaNArrayData() {
-    	double [][] expected = {{Double.NaN, Double.NaN}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}.", result, expected);
+    public void calculateRowTotal_NullDataAndValidDataValidRowValidColumns() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(null));
+                one(values).getValue(0, 1);
+                will(returnValue(2.4));
+                one(values).getValue(0, 2);
+                will(returnValue(null));
+            }
+        });
+        int[] columns = {0, 1, 2};
+        double result = DataUtilities.calculateRowTotal(values, 0, columns);
+        assertEquals("The calculated total is 2.4",result, 2.4, .000000001d);
     }
 
     @Test
-    public void Clone_PositiveInfArrayData() {
-    	double [][] expected = {{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}.", result, expected);
+    public void calculateRowTotal_ValidDataValidRowValidColumnsUnusedColumn() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(4));
+                one(values).getValue(1, 1);
+                will(returnValue(5));
+                one(values).getValue(1, 2);
+                will(returnValue(9));
+            }
+        });
+        int[] columns = {1, 2, 5};
+        double result = DataUtilities.calculateRowTotal(values, 1, columns);
+        assertEquals("The calculated total is 14.0",result, 14.0, .000000001d);
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void calculateRowTotal_ValidDataValidRowNullColumns(){
+    	Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(4));
+                one(values).getValue(1, 1);
+                will(returnValue(5));
+                one(values).getValue(1, 2);
+                will(returnValue(9));
+            }
+        });
+        double result = DataUtilities.calculateRowTotal(values, 1, null);
+    }
+    
+    
+    @Test
+    public void calculateColumnTotal_ValidDataValidRowValidColumnsRowUnusedColumnCountNotSet() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking (new Expectations () {
+            {
+                one(values).getRowCount ();
+                will(returnValue(3));
+                
+                one(values).getValue(0,0);
+                will(returnValue(4.4));
+                one(values).getValue(0,1);
+                will(returnValue(3.1));
+                one(values).getValue(0,2);
+                will(returnValue(8.0));
+                
+                one(values).getValue(1,0);
+                will(returnValue(21.0));
+                one(values).getValue(1,1);
+                will(returnValue(1.1));
+                one(values).getValue(1,2);
+                will(returnValue(9.5));
+                
+                one(values).getValue(2,0);
+                will(returnValue(5.3));
+                one(values).getValue(2,1);
+                will(returnValue(1.9));
+                one(values).getValue(2,2);
+                will(returnValue(1.94));
+            }
+        });
+
+        int [] rows = {0,3};
+        double result = DataUtilities.calculateColumnTotal (values, 1, rows);
+        assertEquals ("The calculated total is 3.1", result, 3.1, 0.000000001d);
+    }
+
+    @Test
+    public void calculateRowTotal_ValidDataValidColumnValidRowsColumnUnusedRowCountNotSet() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking (new Expectations () {
+            {
+                one(values).getColumnCount ();
+                will(returnValue(3));
+                
+                one(values).getValue(0,0);
+                will(returnValue(4.4));
+                one(values).getValue(1,0);
+                will(returnValue(3.1));
+                one(values).getValue(2,0);
+                will(returnValue(8.0));
+                
+                one(values).getValue(0,1);
+                will(returnValue(21.0));
+                one(values).getValue(1,1);
+                will(returnValue(1.1));
+                one(values).getValue(2,1);
+                will(returnValue(9.5));
+                
+                one(values).getValue(0,2);
+                will(returnValue(5.3));
+                one(values).getValue(1,2);
+                will(returnValue(1.9));
+                one(values).getValue(2,2);
+                will(returnValue(1.94));
+            }
+        });
+
+        int [] columns = {0,3};
+        double result = DataUtilities.calculateRowTotal (values, 1, columns);
+        assertEquals ("The calculated total is 3.1", result, 3.1, 0.000000001d);
+    }
+
+    @Test
+    public void calculateColumnTotalCheckArrayChanges () {
+        Mockery mockingContext = new Mockery ();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking (new Expectations () {
+            {
+            	one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(null));
+                one(values).getValue(1, 0);
+                will(returnValue(2.4));
+                one(values).getValue(2, 0);
+                will(returnValue(null));
+            }
+        });
+
+        int [] result = {0,1,2};
+        int [] rows = {0,1,2};
+        DataUtilities.calculateColumnTotal (values, 0, rows);
+        
+        assertArrayEquals (result, rows);
     }
     
     @Test
-    public void Clone_NegativeInfArrayData() {
-    	double [][] expected = {{Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}};
-    	double [][] result = DataUtilities.clone(expected);
-    	
-    	assertArrayEquals("Clone method returns double 2D array containing {Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY}.", result, expected);
+    public void calculateRowTotalCheckArrayChanges () {
+        Mockery mockingContext = new Mockery ();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking (new Expectations () {
+            {
+                one(values).getColumnCount();
+                will(returnValue(3));
+                one(values).getRowCount();
+                will(returnValue(3));
+                one(values).getValue(0, 0);
+                will(returnValue(null));
+                one(values).getValue(0, 1);
+                will(returnValue(2.4));
+                one(values).getValue(0, 2);
+                will(returnValue(null));
+            }
+        });
+
+        int [] result = {0,1,2};
+        int [] rows = {0,1,2};
+        DataUtilities.calculateRowTotal (values, 0, rows);
+        
+        assertArrayEquals (result, rows);
     }
     
+    @Test
+    public void calculateRowTotalValidDataTestTwice(){
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+            	atLeast(1).of(values).getColumnCount();
+                will(returnValue(3));
+                atLeast(1).of(values).getValue(0, 0);
+                will(returnValue(5.67));
+                atLeast(1).of(values).getValue(0, 1);
+                will(returnValue(5.2));
+                atLeast(1).of(values).getValue(0, 2);
+                will(returnValue(1.2));
+            }
+        });
+        DataUtilities.calculateRowTotal(values, 0);
+        assertEquals("The calculated total is 12.07",DataUtilities.calculateRowTotal(values, 0), 12.07, .000000001d);
+    }
+    
+    @Test(timeout=100)
+    public void calculateColumnTotalValidDataTestTwice(){
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+            	atLeast(1).of(values).getRowCount();
+                will(returnValue(3));
+                atLeast(1).of(values).getValue(0, 0);
+                will(returnValue(5.67));
+                atLeast(1).of(values).getValue(1, 0);
+                will(returnValue(5.2));
+                atLeast(1).of(values).getValue(2, 0);
+                will(returnValue(1.2));
+            }
+        });
+        DataUtilities.calculateColumnTotal(values, 0);
+        assertEquals("The calculated total is 12.07",DataUtilities.calculateColumnTotal(values, 0), 12.07, .000000001d);
+    }
+    
+    @Test
+    public void calculateRowTotal_ValidDataValidRowValidColumnsTestedTwice() {
+        Mockery mockingContext = new Mockery();
+        final Values2D values = mockingContext.mock(Values2D.class);
+        mockingContext.checking(new Expectations() {
+            {
+            	atLeast(1).of(values).getColumnCount();
+                will(returnValue(3));
+                atLeast(1).of(values).getRowCount();
+                will(returnValue(3));
+                atLeast(1).of(values).getValue(0, 0);
+                will(returnValue(4));
+                atLeast(1).of(values).getValue(1, 1);
+                will(returnValue(5));
+                atLeast(1).of(values).getValue(1, 2);
+                will(returnValue(9));
+            }
+        });
+        int[] columns = {1, 2};
+        DataUtilities.calculateRowTotal(values, 1, columns);
+        assertEquals("The calculated total is 14.0",DataUtilities.calculateRowTotal(values, 1, columns), 14.0, .000000001d);
+    }
+
+	
     //-----------------------------------------------------------------------------------------------------------------------------//
 
     @After
