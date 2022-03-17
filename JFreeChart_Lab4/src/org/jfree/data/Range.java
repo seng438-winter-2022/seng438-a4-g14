@@ -129,7 +129,8 @@ public strictfp class Range implements Serializable {
      * @return The central value.
      */
     public double getCentralValue() {
-        return this.lower / 2.0 + this.upper / 2.0;
+    	return (this.lower + this.upper)/2.0;
+       // return this.lower / 2.0 + this.upper / 2.0;
     }
 
     /**
@@ -141,7 +142,14 @@ public strictfp class Range implements Serializable {
      * @return <code>true</code> if the range contains the specified value.
      */
     public boolean contains(double value) {
-        return (value >= this.lower && value <= this.upper);
+    	if(value>=this.lower) {
+    		if(value <=this.upper) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	return false;
+     //   return (value >= this.lower && value <= this.upper);
     }
 
     /**
@@ -155,11 +163,22 @@ public strictfp class Range implements Serializable {
      */
     public boolean intersects(double b0, double b1) {
         if (b0 <= this.lower) {
-            return (b1 > this.lower);
+        	if(b1>this.lower) {
+        		return true;
+        	}return false;
+        }else if (b0<this.upper) {
+        	if(b1 >=b0) {
+        		return true;
+        	}
+        	return false;
         }
-        else {
-            return (b0 < this.upper && b1 >= b0);
-        }
+        return false;
+        	
+//            return (b1 > this.lower);
+//        }
+//        else {
+//            return (b0 < this.upper && b1 >= b0);
+//        }
     }
 
     /**
@@ -268,7 +287,7 @@ public strictfp class Range implements Serializable {
      * @return The minimum of the two values. 
      */
     private static double min(double d1, double d2) {
-        if (Double.isNaN(d1)) {
+        if (Double.isNaN(d1) == true) {
             return d2;
         }
         if (Double.isNaN(d2)) {
@@ -299,18 +318,23 @@ public strictfp class Range implements Serializable {
      * @since 1.0.1
      */
     public static Range expandToInclude(Range range, double value) {
+    	Range retRange;
         if (range == null) {
-            return new Range(value, value);
+        	retRange = new Range(value, value);
+        	return retRange;
         }
-        if (value < range.getLowerBound()) {
-            return new Range(value, range.getUpperBound());
+        double lowBound = range.getLowerBound();
+        double upBound = range.getUpperBound();
+        if (value < lowBound) {
+        	retRange = new Range(value, upBound);
         }
-        else if (value > range.getUpperBound()) {
-            return new Range(range.getLowerBound(), value);
+        else if (value > upBound) {
+        	retRange = new Range(lowBound, value);
         }
         else {
-            return range;
+            retRange = range;
         }
+        return retRange;
     }
 
     /**
@@ -423,17 +447,19 @@ public strictfp class Range implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Range)) {
-            return false;
-        }
+        if (obj instanceof Range) {
+        
         Range range = (Range) obj;
         if (!(this.lower == range.lower)) {
             return false;
-        }
-        if (!(this.upper == range.upper)) {
+        }else if (!(this.upper == range.upper)) {
             return false;
-        }
+        }else {
         return true;
+        }
+        }else {
+        	return false;
+        }
     }
 
     /**
@@ -445,7 +471,14 @@ public strictfp class Range implements Serializable {
      * @since 1.0.18
      */
     public boolean isNaNRange() {
-        return Double.isNaN(this.lower) && Double.isNaN(this.upper);
+    	if(Double.isNaN(this.lower)) {
+    		if(Double.isNaN(this.upper)) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	return false;
+   //     return (Double.isNaN(this.lower) && Double.isNaN(this.upper));
     }
     
     /**
