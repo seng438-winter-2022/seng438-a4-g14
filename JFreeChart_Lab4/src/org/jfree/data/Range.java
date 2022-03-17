@@ -92,6 +92,7 @@ public strictfp class Range implements Serializable {
                 + ") <= upper (" + upper + ").";
             throw new IllegalArgumentException(msg);
         }
+
         this.lower = lower;
         this.upper = upper;
     }
@@ -129,7 +130,11 @@ public strictfp class Range implements Serializable {
      * @return The central value.
      */
     public double getCentralValue() {
+    	
+    	double upperFrac = this.lower/2.0;
+    	double lowerFrac = this.upper/2.0;
     	return (this.lower + this.upper)/2.0;
+    	
        // return this.lower / 2.0 + this.upper / 2.0;
     }
 
