@@ -179,10 +179,11 @@ public strictfp class Range implements Serializable {
         }
         return false;
         	
-//            return (b1 > this.lower);
+//        if (b0 <= this.lower) {
+//        	return (b1 > this.lower);
 //        }
 //        else {
-//            return (b0 < this.upper && b1 >= b0);
+//           return (b0 < this.upper && b1 >= b0);
 //        }
     }
 
