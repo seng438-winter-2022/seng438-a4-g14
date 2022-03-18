@@ -631,6 +631,145 @@ public class RangeTest {
 		assertEquals("Should return 'Range[-1.0,1.0]'", test.toString(), "Range[-1.0,1.0]");
 	}
 
+	//mutations
+	//hash code
+	
+	@Test
+	public void hash_ZeroValues() {
+		Range testRange = new Range(0, 0);
+		assertEquals(testRange.hashCode(), 0.0, .000000001d);
+	}
+	
+	@Test
+	public void hash_ValidValues() {
+		Range testRange = new Range(4, 5);
+		assertEquals(testRange.hashCode(), -2.115764224E9, .000000001d);
+	}
+	
+	@Test
+	public void hash_NegativeValidValues() {
+		Range testRange = new Range(-5, -2);
+		assertEquals(testRange.hashCode(), -2.109472768E9, .000000001d);
+	}
+	
+	@Test
+	public void hash_MixValidValues() {
+		Range testRange = new Range(-5, 10);
+		assertEquals(testRange.hashCode(), 4.0370176E7, .000000001d);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void hash_Null() {
+		Range testRange = null;
+		testRange.hashCode();
+	}
+	
+	@Test
+	public void hash_Compare() {
+		Range testRange1 = new Range(3, 12);
+		Range testRange2 = new Range(3, 12);
+		assertEquals(testRange1, testRange2);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void hash_InvalidRangeValues() {
+		Range testRange = new Range(4, 2);
+		testRange.hashCode();
+	}
+	
+	@Test
+	public void shift_ZeroValueShiftPositiveValidValue() {
+		Range testRange = new Range(0, 0);
+		Range resultRange = Range.shift(testRange, 1.2);
+		Range expectedRange = new Range(1.2, 1.2);
+		assertEquals(resultRange, expectedRange);
+	}
+	
+	@Test
+	public void shift_ZeroValueShiftNegativeValidValue() {
+		Range testRange = new Range(0, 0);
+		Range resultRange = Range.shift(testRange, -1.2);
+		Range expectedRange = new Range(-1.2, -1.2);
+		assertEquals(resultRange, expectedRange);
+	}
+	
+	@Test
+	public void shift_NonZeroValueShiftPositiveValidValue() {
+		Range testRange = new Range(5, 10);
+		Range resultRange = Range.shift(testRange, 6);
+		Range expectedRange = new Range(11, 16);
+		assertEquals(resultRange, expectedRange);
+	}
+	
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shift_Null() {
+		Range testRange = null;
+		Range resultRange = Range.shift(testRange, 1.2);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void intersects_NullRangeValidRange() {
+		Range testRange = null;
+		testRange.intersects(5.1, 6.2);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void intersects_ValidRangeNullRange() {
+		Range testRange1 = new Range(1.4, 8.2);
+		Range testRange2 = null;
+		testRange1.intersects(testRange2);
+	}
+	
+	@Test
+	public void intersects_ValidRangePositiveValidValues() {
+		Range testRange = new Range(4, 10);
+		assertTrue(testRange.intersects(5, 5));
+	}
+	
+	@Test
+	public void intersects_ValidRangePositiveOutOfRangeLeft() {
+		Range testRange = new Range(4, 10);
+		assertFalse(testRange.intersects(10, 10));
+	}
+	
+	@Test
+	public void intersects_ValidRangePositiveOutOfRangeRight() {
+		Range testRange = new Range(4, 10);
+		assertFalse(testRange.intersects(4, 4));
+	}
+	
+	@Test
+	public void intersects_ValidRangeValidRangePositiveOutOfRange() {
+		Range testRange = new Range(4, 10);
+		assertFalse(testRange.intersects(100, 10));
+	}
+
+	@Test
+	public void intersects_ValidRangeNegativeValidValues() {
+		Range testRange = new Range(-18,-12);
+		assertTrue(testRange.intersects(-14, -14));
+	}
+	
+	@Test
+	public void intersects_ValidRangeNegativeOutOfRangeRight() {
+		Range testRange = new Range(-18,-12);
+		assertFalse(testRange.intersects(-12,-12));
+	}
+
+	@Test
+	public void intersects_ValidRangeNegativeOutOfRangeLeft() {
+		Range testRange = new Range(-18,-12);
+		assertFalse(testRange.intersects(-18, -18));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void expand_Null() {
+		Range testRange = null;
+		Range.expand(testRange, 1, 2);
+	}
+
+	
 	@After
 	public void tearDown() throws Exception {
 	}
