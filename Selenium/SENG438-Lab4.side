@@ -75,9 +75,9 @@
       "id": "78b746ee-45e5-4159-ab5d-a45bdf36bf28",
       "comment": "",
       "command": "open",
-      "target": "https://www.bestbuy.ca/en-ca/product/samsung-55-4k-uhd-hdr-led-tizen-smart-tv-un55tu7000fxzc-titan-grey/14469353",
+      "target": "",
       "targets": [],
-      "value": ""
+      "value": "https://www.bestbuy.ca/en-ca/product/samsung-55-4k-uhd-hdr-led-tizen-smart-tv-un55tu7000fxzc-titan-grey/14469353"
     }, {
       "id": "e4101d8e-b96b-47fc-8cf7-be83ab2e0ba1",
       "comment": "",
@@ -153,13 +153,6 @@
       "targets": [],
       "value": ""
     }, {
-      "id": "416370ae-4ffb-4953-9a77-41a1d440d23c",
-      "comment": "Wait for Add to Cart",
-      "command": "waitForElementPresent",
-      "target": "xpath=//div[@data-automation='checkout-button-container']//div//div//form//button",
-      "targets": [],
-      "value": "30000"
-    }, {
       "id": "91773429-4cb0-449a-8de6-b16b76cc5868",
       "comment": "Add to Cart",
       "command": "click",
@@ -173,20 +166,6 @@
       "target": "xpath=//div[contains(@class, 'x-page-content')]//div[contains(@class, 'pageContainer')]//div//div[contains(@class, 'addonsPageContentContainer')]//div[contains(@class, 'item-added-message')]//div//div//p",
       "targets": [],
       "value": "This item has been added to your cart."
-    }, {
-      "id": "1851d164-0a42-4b76-b63b-ebc3db61b865",
-      "comment": "Go To Cart",
-      "command": "click",
-      "target": "xpath=//a[@data-automation='x-basket']",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "7470ce15-e7c0-43fa-9602-7c2db216bc92",
-      "comment": "Remove From Cart",
-      "command": "click",
-      "target": "xpath=//button[@data-automation='remove-button']",
-      "targets": [],
-      "value": ""
     }]
   }, {
     "id": "18275a7d-57c0-424f-b399-4ea2f51b0f17",
@@ -236,13 +215,9 @@
     }, {
       "id": "bd423597-497d-4c74-ab0b-cbfb324e732b",
       "comment": "Check first Location",
-      "command": "assertText",
-      "target": "xpath=//span[@id='location-name']/span[2]",
-      "targets": [
-        ["css=#js-yl-2656907 .LocationName-geo", "css:finder"],
-        ["xpath=//span[@id='location-name']/span[2]", "xpath:idRelative"],
-        ["xpath=//span/span[2]", "xpath:position"]
-      ],
+      "command": "//assertText",
+      "target": "xpath=//ol[@class='ResultList']//li[1]//article//h2//a//span//span[@class='LocationName-geo']",
+      "targets": [],
       "value": "Market Mall"
     }]
   }, {
@@ -1155,182 +1130,6 @@
         ["xpath=//div[3]/span/div", "xpath:position"]
       ],
       "value": "$254.00"
-    }]
-  }, {
-    "id": "0f0ea697-7401-4cc6-9ed9-43eae86738bd",
-    "name": "Store Locator None",
-    "commands": [{
-      "id": "0db3d9e1-38e8-4b68-b2a4-4900503ea7bd",
-      "comment": "Go to Store Locator URL",
-      "command": "open",
-      "target": "https://stores.bestbuy.ca/en-ca/search",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "88af0f10-661c-4c54-901a-8e95b55b7742",
-      "comment": "Set Window",
-      "command": "setWindowSize",
-      "target": "1920x1080",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "3171e0f9-6e31-470d-8742-7e70756568a1",
-      "comment": "Focus Search Box",
-      "command": "click",
-      "target": "xpath=//form[@id='search-form']/input",
-      "targets": [
-        ["id=q", "id"],
-        ["name=q", "name"],
-        ["css=#q", "css:finder"],
-        ["xpath=//input[@id='q']", "xpath:attributes"],
-        ["xpath=//form[@id='search-form']/input", "xpath:idRelative"],
-        ["xpath=//form/input", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "8f3d60e4-bea6-467d-b218-142f8e26cacc",
-      "comment": "Enter Apple Park Zip",
-      "command": "type",
-      "target": "xpath=//form[@id='search-form']/input",
-      "targets": [],
-      "value": "95014"
-    }, {
-      "id": "91d8a1d5-f75d-42d2-83f3-1baff1a7bde4",
-      "comment": "Click Search Button",
-      "command": "click",
-      "target": "xpath=//div[@class='Locator-buttons']//button[contains(@class, 'search-button')]",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "a8f99c24-ad44-49c8-9767-d5547c8e52ef",
-      "comment": "Check first Location",
-      "command": "assertText",
-      "target": "xpath=//div[@class='Locator-noResults']",
-      "targets": [
-        ["css=.Locator-noResults", "css:finder"],
-        ["xpath=//div[@id='js-locator']/div[2]/div[3]/div/div", "xpath:idRelative"],
-        ["xpath=//div[2]/div[3]/div/div", "xpath:position"]
-      ],
-      "value": "Sorry, there are no locations near \"MONTE VISTA, CA\". Please modify your search and try again or browse our directory."
-    }]
-  }, {
-    "id": "0af2796e-f4e3-4279-b4cd-d09599ec0603",
-    "name": "Search for 1Ph0ne",
-    "commands": [{
-      "id": "26b21608-093b-4115-ab48-ec60650849e0",
-      "comment": "Navigate to URL",
-      "command": "open",
-      "target": "https://www.bestbuy.ca/en-ca",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "cbef5cf0-7920-4f6e-ac6d-c08f21a5a022",
-      "comment": "Set Window Size",
-      "command": "setWindowSize",
-      "target": "1920x1080",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "b20c31c1-00bb-43e8-8996-7d5e088a0070",
-      "comment": "Focus Search",
-      "command": "click",
-      "target": "xpath=//input[@data-automation='x-search-input']",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "88b829c8-8333-416e-9947-b1a5475adba1",
-      "comment": "Enter Search Text",
-      "command": "type",
-      "target": "xpath=//input[@data-automation='x-search-input']",
-      "targets": [],
-      "value": "1Ph0ne"
-    }, {
-      "id": "445cd864-663d-4575-86c4-42d434050437",
-      "comment": "Search Item",
-      "command": "click",
-      "target": "xpath=//button[@data-automation='x-search-submit']",
-      "targets": [
-        ["linkText=Order Status", "linkText"],
-        ["css=.topLinkAnchor_3PJ9l:nth-child(1)", "css:finder"],
-        ["xpath=//a[contains(text(),'Order Status')]", "xpath:link"],
-        ["xpath=//div[@id='root']/div/div[4]/header/div/div/div/div/a", "xpath:idRelative"],
-        ["xpath=//a[contains(@href, '/order/en-ca')]", "xpath:href"],
-        ["xpath=//header/div/div/div/div/a", "xpath:position"],
-        ["xpath=//a[contains(.,'Order Status')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "d7829204-f1a4-4b21-baf9-e81f60276f98",
-      "comment": "Check First Result",
-      "command": "assertText",
-      "target": "xpath=(//div[contains(@class, 'x-productListItem')])[1]//div[@data-automation='productItemName']",
-      "targets": [],
-      "value": "Ooma Telo Home Phone System with 1 HD3 Cordless Handset"
-    }]
-  }, {
-    "id": "88f90152-206c-4d96-a941-2ebde8dc68e4",
-    "name": "Dell In Store Pickup In Stock",
-    "commands": [{
-      "id": "00cf8929-3021-4374-878a-6bd2f4bbefb9",
-      "comment": "Open Page",
-      "command": "open",
-      "target": "https://www.bestbuy.ca/en-ca",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "af1637eb-9ac2-488e-ae71-4634dd87f1a7",
-      "comment": "Set Window",
-      "command": "setWindowSize",
-      "target": "1920x1080",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "d7c79d6f-c495-4d1f-82e4-b4d23d875b37",
-      "comment": "Click Brands Dropdown",
-      "command": "click",
-      "target": "xpath=//span[@data-automation='x-brands']",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "a13c8441-3d3e-4e35-8efa-6dd861519e0f",
-      "comment": "Click Dell",
-      "command": "click",
-      "target": "xpath=//ul[@data-automation='popular-brands-brands-list']//li[9]//a",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "b0ee70cc-2b8c-492a-b03e-029be8b2d84c",
-      "comment": "Select Second Item",
-      "command": "click",
-      "target": "xpath=(//div[contains(@class, 'x-productListItem')])[4]//div/a",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "af56d492-fdc4-4691-9f94-983d9b01948d",
-      "comment": "In Store Pickup",
-      "command": "click",
-      "target": "xpath=//div[@data-automation='checkout-button-container']//button[contains(@class, 'reserveInStoreButton')]",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "918ad9ca-18a1-4fc1-bbf9-6c11d12d1890",
-      "comment": "Check Store Pickup Message",
-      "command": "assertText",
-      "target": "xpath=//h1[@class='page-title checkout']//span",
-      "targets": [
-        ["css=.page-title > span", "css:finder"],
-        ["xpath=//div[@id='root']/div/div/div/section/div/h1/span", "xpath:idRelative"],
-        ["xpath=//h1/span", "xpath:position"],
-        ["xpath=//span[contains(.,'Store Pickup')]", "xpath:innerText"]
-      ],
-      "value": "Store Pickup"
-    }, {
-      "id": "473c4fae-584c-4642-a3b4-594012412e3d",
-      "comment": "Cancel Order",
-      "command": "click",
-      "target": "xpath=//div[@data-automation='cancel-rpu']//button",
-      "targets": [],
-      "value": ""
     }]
   }],
   "suites": [{
